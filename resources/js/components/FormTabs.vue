@@ -51,7 +51,7 @@
                     ]"
           :label="tab.name"
         >
-          <div class="divide-y divide-gray-100 dark:divide-gray-700" :class="getBodyClass(tab)">
+        <div class="divide-y divide-gray-100 dark:divide-gray-700" :class="getBodyClass(tab)" v-show="tab.properties.preload || getIsTabCurrent(tab)">
             <KeepAlive>
               <template
                 v-for="(field, index) in tab.fields"
@@ -74,6 +74,7 @@
                   :via-relationship="viaRelationship"
                   :via-resource="viaResource"
                   :via-resource-id="viaResourceId"
+                  :pre-load="getPreLoad(tab)"
                   @field-changed="$emit('field-changed')"
                   @file-deleted="$emit('update-last-retrieved-at-timestamp')"
                   @file-upload-started="$emit('file-upload-started')"
@@ -115,5 +116,10 @@ export default {
   data: () => ({
     tabMode: 'form',
   }),
+  methods: {
+    getPreLoad: function (tab) {
+      return (tab.properties.preload || this.getIsTabCurrent(tab));
+    },
+  }
 };
 </script>

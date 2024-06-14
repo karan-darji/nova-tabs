@@ -43,6 +43,11 @@ class Tab implements TabContract, JsonSerializable, Arrayable
     /** @var string[] */
     protected $attributeValue = [];
 
+   /** @var bool[] */
+
+    protected $preload;
+
+
     public function __construct($title, array $fields, $position = 0)
     {
         $this->title = $title;
@@ -121,7 +126,9 @@ class Tab implements TabContract, JsonSerializable, Arrayable
             'shouldShow' => $this->shouldShow(),
             'bodyClass' => $this->getBodyClass(),
             'changedAttribute' => $this->getChangedAttribute(),
-            'attributeValue' => $this->getAttributeValue()
+            'attributeValue' => $this->getAttributeValue(),
+            'preload' => $this->getPreload(),
+
         ];
     }
 
@@ -203,5 +210,18 @@ class Tab implements TabContract, JsonSerializable, Arrayable
     public function getBodyClass(): array
     {
         return $this->bodyClass;
+    }
+
+    public function preload($preload): self
+    {
+
+        $this->preload = $preload;
+        return $this;
+    }
+
+    public function getPreload(): bool
+    {
+        $preload = $this->preload===null ?true :false;
+        return (bool) $this->resolve($preload);
     }
 }
