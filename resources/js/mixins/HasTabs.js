@@ -148,20 +148,48 @@ export default {
     }
 
     if (this.tabMode === 'form') {
+      // this.$watch('validationErrors', (newErrors) => {
+      //   if (newErrors.errors) {
+      //     Object.entries(newErrors.errors).forEach(error => {
+      //       if (error[0] && this.fields.find(x => x.attribute === error[0])) {
+      //         let field = this.getNestedObject(this.fields, 'attribute', error[0]);
+      //         let slug = this.getNestedObject(this.fields, 'attribute', error[0]).tabSlug + '-tab';
+      //         let addClasses = ['tabs-text-' + this.getErrorColor() + '-500', 'tabs-border-b-2', 'tabs-border-b-' + this.getErrorColor() + '-500', 'tab-has-error']
+      //         let removeClasses = ['tabs-text-gray-600', 'hover:tabs-text-gray-800', 'dark:tabs-text-gray-400', 'hover:dark:tabs-text-gray-200']
+      //         this.$refs[slug][0].classList.add(...addClasses)
+      //         this.$refs[slug][0].classList.remove(...removeClasses)
+      //       }
+      //     });
+      //   }
+      // })
       this.$watch('validationErrors', (newErrors) => {
+        // Define the classes to be added/removed
+        let addClasses = ['tabs-text-' + this.getErrorColor() + '-500', 'tabs-border-b-2', 'tabs-border-b-' + this.getErrorColor() + '-500', 'tab-has-error'];
+        let removeClasses = ['tabs-text-gray-600', 'hover:tabs-text-gray-800', 'dark:tabs-text-gray-400', 'hover:dark:tabs-text-gray-200'];
+      
+        // Remove error classes from all tabs
+        this.fields.forEach(field => {
+          let slug = field.tabSlug + '-tab';
+          if (this.$refs[slug] && this.$refs[slug][0]) {
+            this.$refs[slug][0].classList.remove(...addClasses);
+            this.$refs[slug][0].classList.add(...['tabs-border-b-2']);
+          }
+        });
+      
+        // Add error classes to tabs with errors
         if (newErrors.errors) {
           Object.entries(newErrors.errors).forEach(error => {
             if (error[0] && this.fields.find(x => x.attribute === error[0])) {
               let field = this.getNestedObject(this.fields, 'attribute', error[0]);
-              let slug = this.getNestedObject(this.fields, 'attribute', error[0]).tabSlug + '-tab';
-              let addClasses = ['tabs-text-' + this.getErrorColor() + '-500', 'tabs-border-b-2', 'tabs-border-b-' + this.getErrorColor() + '-500', 'tab-has-error']
-              let removeClasses = ['tabs-text-gray-600', 'hover:tabs-text-gray-800', 'dark:tabs-text-gray-400', 'hover:dark:tabs-text-gray-200']
-              this.$refs[slug][0].classList.add(...addClasses)
-              this.$refs[slug][0].classList.remove(...removeClasses)
+              let slug = field.tabSlug + '-tab';
+              if (this.$refs[slug] && this.$refs[slug][0]) {
+                this.$refs[slug][0].classList.add(...addClasses);
+                this.$refs[slug][0].classList.remove(...removeClasses);
+              }
             }
           });
         }
-      })
+      });
     }
   },
 
