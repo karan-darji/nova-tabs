@@ -24,6 +24,13 @@ class Tabs extends Panel
     public $defaultSearch = false;
 
     /**
+     * The tabs in the panel.
+     *
+     * @var array
+     */
+    public array $tabs = [];
+
+    /**
      * @var bool
      */
     public bool $showTitle = false;
