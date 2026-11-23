@@ -210,7 +210,7 @@ class Tabs extends Panel
             if ($field instanceof MergeValue) {
                 if (!isset($field->panel)) {
                     $field->assignedPanel = $this;
-                    $field->panel = $this->name;
+                    $field->panel = $this;
                 }
 
                 $this->addFields(
@@ -223,7 +223,7 @@ class Tabs extends Panel
                 continue;
             }
 
-            $field->panel = $this->name;
+            $field->panel = $this;
             $field->assignedPanel = $this;
 
             $meta = [
