@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Laravel\Nova\Contracts\ListableField;
 use Laravel\Nova\Tabs\TabsGroup;
 use Laravel\Nova\ResourceToolElement;
+use Laravel\Nova\Panel;
 use function is_array;
 use function is_callable;
 
@@ -40,7 +41,7 @@ class Tabs extends TabsGroup
      */
     public bool $selectFirstTab = true;
 
-    private int $tabsCount = 0;
+    public int $tabsCount = 0;
 
     public $slug = null;
 
@@ -146,7 +147,7 @@ class Tabs extends TabsGroup
      * @param $fields
      * @return Collection<TabContract>
      */
-    private function convertFieldsToTabs($fields): Collection
+    protected function convertFieldsToTabs($fields): Collection
     {
         $fieldsCollection = collect(
             is_callable($fields) ? $fields() : $fields
@@ -190,10 +191,10 @@ class Tabs extends TabsGroup
     /**
      * Add fields to the Tab.
      *
-     * @param  TabContract  $tab
+     * @param  TabContract|Tab  $tab
      * @return $this
      */
-    public function addFields(TabContract $tab): self
+    public function addFields($tab): self
     {
         $this->tabs[] = $tab;
 
