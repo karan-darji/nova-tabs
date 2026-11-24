@@ -68,6 +68,27 @@ class Tabs extends TabsGroup
         parent::__construct($name, $fields);
     }
 
+    /**
+     * Hydrate panel from fields.
+     *
+     * @internal
+     */
+    public static function hydrate(TabsGroup $panel, iterable $fields): void
+    {
+        $fields = is_array($fields) ? $fields : iterator_to_array($fields);
+        $first = $fields[array_key_first($fields)] ?? null;
+        $original = $first?->panel ?? null;
+
+        if ($original instanceof TabsGroup) {
+            $panel->name = is_string($original->name) ? $original->name : (string) ($original->originalName ?? 'Tabs');
+            $panel->showTitle = $original->showTitle ?? true;
+            $panel->showToolbar = $original->showToolbar ?? false;
+            $panel->attribute = $original->attribute ?? null;
+        } elseif (is_string($original)) {
+            $panel->name = $original;
+        }
+    }
+
 
     /**
      * Set the tabs slug.
@@ -277,13 +298,32 @@ class Tabs extends TabsGroup
     }
 
     /**
+     * Prevent infinite recursion if Nova overwrites $name with the panel object
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        if (!is_string($this->name)) {
+            $this->name = (string) ($this->preservedName ?? 'Tabs');
+        }
+
+        return $this->name;
+    }
+
+    /**
      * Prepare the panel for JSON serialization.
      *
      * @return array
      */
     public function jsonSerialize(): array
     {
+        if (!is_string($this->name)) {
+            $this->name = (string) ($this->preservedName ?? 'Tabs');
+        }
+
         $result = array_merge(parent::jsonSerialize(), [
+            'name' => (string) ($this->preservedName ?? $this->name ?? 'Tabs'),
             'defaultSearch' => $this->defaultSearch,
             'showTitle' => $this->showTitle,
             'slug' => $this->slug,
