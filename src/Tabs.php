@@ -11,12 +11,12 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Nova\Contracts\ListableField;
-use Laravel\Nova\Panel;
+use Laravel\Nova\Tabs\TabsGroup;
 use Laravel\Nova\ResourceToolElement;
 use function is_array;
 use function is_callable;
 
-class Tabs extends Panel
+class Tabs extends TabsGroup
 {
     /**
      * @var mixed
@@ -128,7 +128,7 @@ class Tabs extends Panel
      * @param  Closure|array  $fields
      * @return array
      */
-    protected function prepareFields($fields): array
+    protected function prepareFields(callable|iterable $fields): iterable
     {
         $this->convertFieldsToTabs($fields)
             ->filter(static function (Tab $tab): bool {
